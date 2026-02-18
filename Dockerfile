@@ -8,7 +8,7 @@ RUN corepack enable
 
 WORKDIR /app
 
-ARG OPENCLAW_DOCKER_APT_PACKAGES=""
+ARG OPENCLAW_DOCKER_APT_PACKAGES="curl poppler-utils ffmpeg imagemagick"
 RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
       apt-get update && \
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $OPENCLAW_DOCKER_APT_PACKAGES && \
@@ -27,7 +27,7 @@ RUN pnpm install --frozen-lockfile
 # Build with: docker build --build-arg OPENCLAW_INSTALL_BROWSER=1 ...
 # Adds ~300MB but eliminates the 60-90s Playwright install on every container start.
 # Must run after pnpm install so playwright-core is available in node_modules.
-ARG OPENCLAW_INSTALL_BROWSER=""
+ARG OPENCLAW_INSTALL_BROWSER="1"
 RUN if [ -n "$OPENCLAW_INSTALL_BROWSER" ]; then \
       apt-get update && \
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xvfb && \
