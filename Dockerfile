@@ -16,6 +16,38 @@ RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
 
+# Install Google Chrome Stable
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends wget gnupg && \
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | \
+      gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+      > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends google-chrome-stable && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install 1Password CLI
+RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+      gpg --dearmor -o /usr/share/keyrings/1password-archive-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" \
+      > /etc/apt/sources.list.d/1password.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends 1password-cli && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install gogcli (Google Suite CLI: Gmail, GCal, GDrive, GContacts)
+RUN GOGCLI_VERSION="0.7.1" && \
+    curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOGCLI_VERSION}/gogcli_${GOGCLI_VERSION}_linux_amd64.tar.gz" \
+      | tar -xz -C /usr/local/bin gogcli && \
+    chmod +x /usr/local/bin/gogcli
+
+# Install goplaces (Google Places CLI)
+RUN GOPLACES_VERSION="0.3.0" && \
+    curl -fsSL "https://github.com/steipete/goplaces/releases/download/v${GOPLACES_VERSION}/goplaces_${GOPLACES_VERSION}_linux_amd64.tar.gz" \
+      | tar -xz -C /usr/local/bin goplaces && \
+    chmod +x /usr/local/bin/goplaces
+
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ui/package.json ./ui/package.json
 COPY patches ./patches
