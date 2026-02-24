@@ -37,15 +37,15 @@ RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install gogcli (Google Suite CLI: Gmail, GCal, GDrive, GContacts)
-RUN GOGCLI_VERSION="0.7.1" && \
+RUN GOGCLI_VERSION="0.11.0" && \
     curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOGCLI_VERSION}/gogcli_${GOGCLI_VERSION}_linux_amd64.tar.gz" \
-      | tar -xz -C /usr/local/bin gogcli && \
-    chmod +x /usr/local/bin/gogcli
+      | tar -xz -C /usr/local/bin --strip-components=0 && \
+    chmod +x /usr/local/bin/gog
 
 # Install goplaces (Google Places CLI)
 RUN GOPLACES_VERSION="0.3.0" && \
     curl -fsSL "https://github.com/steipete/goplaces/releases/download/v${GOPLACES_VERSION}/goplaces_${GOPLACES_VERSION}_linux_amd64.tar.gz" \
-      | tar -xz -C /usr/local/bin goplaces && \
+      | tar -xz -C /usr/local/bin --strip-components=0 && \
     chmod +x /usr/local/bin/goplaces
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./

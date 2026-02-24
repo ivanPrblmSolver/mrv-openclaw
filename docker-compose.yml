@@ -3,6 +3,7 @@ services:
     image: ${OPENCLAW_IMAGE}
     build: .
     restart: unless-stopped
+    shm_size: 2g
     env_file:
       - .env
     environment:
