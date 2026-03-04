@@ -1,0 +1,5 @@
+ARG OPENCLAW_IMAGE
+FROM ${OPENCLAW_IMAGE}
+
+RUN npm install global-agent
+COPY proxy-bootstrap.mjs .
