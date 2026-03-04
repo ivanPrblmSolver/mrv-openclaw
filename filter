@@ -1,0 +1,9 @@
+# Google APIs
+\.googleapis\.com$
+
+# LLM APIs
+\.moonshot\.ai$
+
+# Telegram (Bot API at api.telegram.org)
+\.telegram\.org$
+^t\.me$
