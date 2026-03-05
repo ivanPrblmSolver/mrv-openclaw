@@ -26,16 +26,10 @@ services:
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
-    ports:
-      - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
     networks:
       - internal
     depends_on:
       - egress-proxy
-    deploy:
-      resources:
-        limits:
-          memory: 1280M
     command:
       [
         "node",
@@ -60,6 +54,18 @@ services:
       retries: 5
       start_period: 20s
 
+  ingress-proxy:
+    image: alpine/socat
+    restart: unless-stopped
+    command: TCP-LISTEN:18789,fork,reuseaddr TCP:openclaw-gateway:18789
+    ports:
+      - "127.0.0.1:18789:18789"
+    networks:
+      - internal
+      - host-access
+    depends_on:
+      - openclaw-gateway
+
   egress-proxy:
     image: vimagick/tinyproxy:latest
     restart: unless-stopped
@@ -78,3 +84,4 @@ networks:
   internal:
     internal: true
   external:
+  host-access:

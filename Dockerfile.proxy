@@ -1,5 +1,5 @@
 ARG OPENCLAW_IMAGE
 FROM ${OPENCLAW_IMAGE}
 
-RUN npm install global-agent
+# undici is built into Node.js 22, no install needed
 COPY proxy-bootstrap.mjs .
