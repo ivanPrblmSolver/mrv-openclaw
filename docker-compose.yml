@@ -32,10 +32,6 @@ services:
       - internal
     depends_on:
       - egress-proxy
-    deploy:
-      resources:
-        limits:
-          memory: 1280M
     command:
       [
         "node",
